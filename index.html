@@ -6,28 +6,35 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Etch-A-Sketch</title>
 	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="bg.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Londrina+Sketch&display=swap" rel="stylesheet">	
 	<script src="scripts.js" defer></script>
 	<link rel="shortcut icon" type="image/png" href="#"/>
 </head>
 
-<body>
+<body class = "pattern-dots-sm">
 	<div>
 		<div class = 'options-container'>
-			<button id = 'new'>new</button>
+			<button id = 'new'>Blank Canvas</button>
+			<button id = 'newMosaic'>Mosaic Canvas</button>
 			<input type="range" id='divCountSlider' value = "24" min="12" max="64">
-			<p class = 'rangePara'>Size: </p>
-			<button>background</button>
-			<button>color grabber</button>
-			<button>black</button>
-			<button>color random</button>
-			<button>color pick</button>
-			<button>darken</button>
-			<button>lighten</button>
-			<button>eraser</button>
+			<div class = 'sliderInfo'>
+				<p>Grid</p>
+				<p class = 'rangePara'>Grid</p>
+				<p class = 'sampleDiv'></p>
+			</div>
+			<div class = 'drawOptions'>
+				<input type="color" id = 'colorSelection' value="#000000">
+				<button id = 'randomColorButton'>Random</button>
+				<button id = 'darkenButton'>Darken</button>
+				<button id = 'lightenButton'>Lighten</button>
+				<img class = 'svg' src = "eraser.svg">
+			</div>
 		</div>
 		<div class = 'sketch-wrapper'>
 			<div class = 'sketch-container'>
 				<div class = 'sketch-inner'></div>
+				<div class = 'logo'>TCo's Etch-A-Sketch</div>
 			</div>
 		</div>
 	</div>

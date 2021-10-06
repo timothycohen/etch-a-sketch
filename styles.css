@@ -3,14 +3,14 @@ html {
 	caret-color: transparent;
 }
 
-*, *:before, *:after { 
-	box-sizing: inherit; 
-}
-
 body {
 	/* background-color:#bae8fc; */
+	/* background-color: rgb(252, 192, 215); */
+	background-color: #FFE5D9;
+	/* background-color: rgb(179, 74, 114); */
 	margin: 0;
 	padding: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 body > div{
@@ -22,7 +22,8 @@ body > div{
 }
 
 .options-container{
-	background-color: green;
+	/* background-color: #324870; */
+	background-color: #55B8CD;
 	width: 300px;
 	height: 450px;
 	border-radius: 5px;
@@ -31,15 +32,92 @@ body > div{
 	align-content: center;
 	justify-items: space-between;
 	padding: 15px;
+	border: 2px solid gray;
+	box-shadow: 5px 2px 6px #573838;
+}
+
+button {
+	width: 75%;
+	margin: 10px auto;
+	font-size: 20px;
+	font-weight: 700;
+	background-color: transparent;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: all .07s ease;
+  box-shadow: 0 0 .1rem black;
+}
+
+#divCountSlider{
+	color: #13bba4;
+}
+
+.drawOptions{
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#colorSelection{
+  height: 50px;
+	margin: 10px auto;
+}
+
+.drawOptions > img{
+	width: 50px;
+	height: auto;
+}
+
+.drawOptions > img:hover, button:hover, #colorSelection:hover{
+	transform: scale(1.1);
+	cursor: pointer;
+}
+
+.selected{
+	transform: scale(1.1);
+	border-bottom: 2px solid gold;
+}
+
+#divCountSlider:hover{
+	background-color: red;
+}
+
+button:hover{
+  box-shadow: 0 0 .1rem black;
+}
+
+
+
+*, *:before, *:after { 
+	box-sizing: inherit; 
 }
 
 .sketch-wrapper{
-	/* background-color: gold; */
-	width: 636px; /*sqrt2 aspect ratio*/
-	height: 450px;
-	min-width: 320px;
-	min-height: 226px;
+	width: 990px; /*sqrt2 aspect ratio*/
+	height: 700px;
+	min-width: 990px;
+	min-height: 700px;
 }
+
+@media only screen and (max-width: 1300px) {
+	.sketch-wrapper{
+		width: 637px;
+		height: 450px;
+		min-width: 637px;
+		min-height: 450px;
+	}
+}	
+
+@media only screen and (max-width: 637px) {
+	.sketch-wrapper{
+		width: 425px;
+		height: 300px;
+		min-width: 637px;
+		min-height: 450px;
+	}
+}	
+
 
 .sketch-container{
 	width: 100%;
@@ -47,7 +125,17 @@ body > div{
 	padding: 8% 9.5% 10.5% 9.5%;
 	background-color: #AD0106;
 	border-radius: 35px;
-	box-shadow: 10px 5px 12px gray;
+	border: 3px solid gray;
+	box-shadow: 10px 5px 12px #573838;
+}
+
+.logo{
+	padding-top: 5%;
+	text-align: center;
+	font-size: xx-large;
+	color: #FFFBD7;
+	font-family: 'Londrina Sketch', cursive;
+	font-weight: 700;
 }
 
 .sketch-inner{
@@ -57,4 +145,25 @@ body > div{
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	user-select: none;
+	cursor: crosshair;
+}
+
+
+
+.sliderInfo {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	border-bottom: 1px solid gray;
+	height: 40px;
+}
+
+.sliderInfo p{
+	font-size: 20px;
+	height: 30px;
+	width: 25%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
