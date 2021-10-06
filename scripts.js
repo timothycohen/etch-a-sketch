@@ -11,7 +11,8 @@ const colorSelection = document.querySelector('#colorSelection');
 const randomColorButton = document.querySelector('#randomColorButton');
 const darkenButton = document.querySelector('#darkenButton');
 const lightenButton = document.querySelector('#lightenButton');
-const eraser = document.querySelector('.svg');
+const eraser = document.querySelector('.eraser');
+const kbd = document.querySelector('.kbc-button');
 
 // #################### Options Logic ####################
 
@@ -22,8 +23,11 @@ divCountSlider.onchange = () => updateDivCount();
 function updateDivCount() {
 	divCount = divCountSlider.value;
 	rangePara.innerText = `${divCount} x ${divCount}`;
+	newSampleDiv()
+}
 
-	newDivSize = calcNewDiv(divCount);
+function newSampleDiv(){
+	divCount ? newDivSize = calcNewDiv(divCount) : newDivSize = calcNewDiv(oldDivCount);
 	sample = createDiv(newDivSize[0], newDivSize[1]);
 	sample.style.border = `solid ${bgColor} 1px`;
 	sampleDiv.appendChild(sample)
@@ -34,11 +38,12 @@ function updateDivCount() {
 
 
 // #################### Initialize ####################
-let bgColor = 'whitesmoke';
+let bgColor = 'rgb(251,251,251)';
 let oldDivCount = divCountSlider.value;
 createCanvas(divCountSlider.value);
 updateDivCount();
 let mouse = false;
+let key = false;
 let previousDrawType = colorSelection.value;
 let drawType = 'color';
 addIndicator();
@@ -75,6 +80,7 @@ function resizeDiv() {
 		canvas.children[i].style.width = `${newDivSize[0]}px`;
 		canvas.children[i].style.height = `${newDivSize[1]}px`;
 	}
+	newSampleDiv();
 }
 
 function createCanvas (divCount, bg = bgColor) {
@@ -105,7 +111,7 @@ function clearCanvas() {
 // #################### Erase Logic ####################
 
 function mouseDown () {
-	if (mouse === false){
+	if (mouse === false && key === false){
 		mouse = true;
 		canvas.style.cursor = 'not-allowed';
 		previousDrawType = drawType;
@@ -115,7 +121,7 @@ function mouseDown () {
 }
 
 function mouseUp () {
-	if (mouse === true){
+	if (mouse === true && key === false){
 		mouse = false;
 		canvas.style.cursor = 'crosshair';
 		drawType = previousDrawType;
@@ -128,6 +134,30 @@ canvas.onmouseup = () => mouseUp()
 canvasWrapper.onmouseleave = () => mouseUp()
 eraser.onclick = () => mouse === true ? mouseUp() : mouseDown();
 
+// #################### No Input Logic ####################
+
+
+window.onkeydown = (e) => keyDown(e)
+window.onkeyup = (e) => keyUp(e)
+
+function keyDown (e){
+	if (key === false && e.key === 'w' && mouse === false){
+		key = !key;
+		canvas.style.cursor = 'pointer';
+		previousDrawType = drawType;
+		drawType = 'none';
+		addIndicator();
+	}
+};
+
+function keyUp (e){
+	if (key === true && e.key === 'w' && mouse === false){
+		key = !key;
+		canvas.style.cursor = 'crosshair';
+		drawType = previousDrawType;
+		addIndicator();
+	}
+};
 
 // #################### Draw Logic ####################
 
@@ -151,15 +181,19 @@ canvas.addEventListener("mouseover", function( event ) {
 			break;
 		case 'lighten':
 			rgb = getComputedStyle(event.target).getPropertyValue("background-color");
-			rgba = buildRGBA(rgb);
-			color = lighten(rgba);
+			hex = RGBToHex(rgb)
+			color = shade(hex, .1)
 			break;
 		case 'darken':
-			color = 'brown';
+			rgb = getComputedStyle(event.target).getPropertyValue("background-color");
+			hex = RGBToHex(rgb)
+			color = shade(hex, -.1)
 			break;
 		case 'erase':
 			color = bgColor;
 			break;
+		default:
+			return;
 	}
 	event.target.style.backgroundColor = color;
 });
@@ -175,6 +209,7 @@ function addIndicator () {
 	lightenButton.classList.remove('selected');
 	darkenButton.classList.remove('selected');
 	eraser.classList.remove('selected');
+	kbd.classList.remove('active');
 	
 	switch(drawType){
 		case 'color': colorSelection.classList.add('selected'); break;
@@ -182,61 +217,46 @@ function addIndicator () {
 		case 'lighten': lightenButton.classList.add('selected'); break;
 		case 'darken': darkenButton.classList.add('selected'); break;
 		case 'erase': eraser.classList.add('selected'); break;
+		case 'none': kbd.classList.add('active'); break;
 	}
 };
 
+// #################### Lighten and Darken ####################
 
+// source https://css-tricks.com/converting-color-spaces-in-javascript/
 
-// #################### Todo: Lighten and Darken ####################
+function RGBToHex(rgb) {
+	// Choose correct separator
+	let sep = rgb.indexOf(",") > -1 ? "," : " ";
+	// Turn "rgb(r,g,b)" into [r,g,b]
+	rgb = rgb.substr(4).split(")")[0].split(sep);
 
+	let r = (+rgb[0]).toString(16),
+			g = (+rgb[1]).toString(16),
+			b = (+rgb[2]).toString(16);
 
-// var LightenColor = function(color, percent) {
-// 	var num = parseInt(color,16),
-// 	amt = Math.round(2.55 * percent),
-// 	R = (num >> 16) + amt,
-// 	B = (num >> 8 & 0x00FF) + amt,
-// 	G = (num & 0x0000FF) + amt;
+	if (r.length == 1)
+		r = "0" + r;
+	if (g.length == 1)
+		g = "0" + g;
+	if (b.length == 1)
+		b = "0" + b;
 
-// 	return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
-// };
+	return "#" + r + g + b;
+}
 
+// source: https://codepen.io/Loutrinos/pen/dWjRKE?editors=0012
+function shade(color, percent) {
+	let f=parseInt(color.slice(1),16);		// take off the # and then parse it into an integer with base 16
+	let t=percent<0?0:255;								// if percent is <0 t is 0, so it'll darken
+	let p=percent<0?percent*-1:percent;		// p is the absolute value of percent
+	let R=f>>16;													// the right shift operator will drop the last bit which in binary is equivalent to dividing by 2. f>>16 = f/(2^16) which converts our binary number into a hex digit.
+	let G=f>>8&0x00FF;										// bitwise and returns 1 where both bits are 1
+	let B=f&0x0000FF;
 
-// for (let i = 0; i < 10; i++){
-// 	console.log(LightenColor('3faa3f', 65))
-// }
-
-
-
-
-
-
-
-// function buildRGBA (rgb){
-// 	if (rgb.slice(3,4) === 'a'){
-// 		return rgb;
-// 	}
-// 	else{
-// 		rgba = rgb.slice(3);
-// 		rgba = rgba.slice(0, -1);
-// 		rgba = 'rgba' + rgba + ', 1)'
-// 		return rgba;
-// 	}
-// }
-
-
-// function lighten(rgba){
-// 	alpha = rgba.slice(-2, -1);
-// 	if (alpha == 1){
-// 		alpha = alpha - .1;
-// 	}
-// 	else if (alpha == 0){
-// 	}
-// 	else
-// 	{
-// 		alpha = alpha - .1;
-// 	}
-// 	rgba = rgba.slice(0, -3) + ' ' + alpha + ')';
-// 	console.log(rgba)
-// 	console.log('lightened')
-// 	return rgba;
-// }
+	return "#"+
+	(0x1000000 +
+	(Math.round((t-R)*p)+R)*0x10000 +
+	(Math.round((t-G)*p)+G)*0x100 +
+	(Math.round((t-B)*p)+B)).toString(16).slice(1);
+}

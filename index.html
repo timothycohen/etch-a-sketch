@@ -4,16 +4,18 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Etch-A-Sketch</title>
+	<title>TCo's Etch-A-Sketch</title>
 	<link rel="stylesheet" href="styles.css">
 	<link rel="stylesheet" href="bg.css">
+	<link rel="stylesheet" href="https://unpkg.com/keyboard-css@1.2.4/dist/css/main.min.css" />
 	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Londrina+Sketch&display=swap" rel="stylesheet">	
 	<script src="scripts.js" defer></script>
-	<link rel="shortcut icon" type="image/png" href="#"/>
+	<link rel="shortcut icon" type="image/png" href="favicon.png"/>
 </head>
 
 <body class = "pattern-dots-sm">
 	<div>
+
 		<div class = 'options-container'>
 			<button id = 'new'>Blank Canvas</button>
 			<button id = 'newMosaic'>Mosaic Canvas</button>
@@ -25,18 +27,30 @@
 			</div>
 			<div class = 'drawOptions'>
 				<input type="color" id = 'colorSelection' value="#000000">
-				<button id = 'randomColorButton'>Random</button>
+				<button id = 'randomColorButton'>Random Color</button>
 				<button id = 'darkenButton'>Darken</button>
 				<button id = 'lightenButton'>Lighten</button>
-				<img class = 'svg' src = "eraser.svg">
+				<div class = 'icons'>
+					<span class = 'eraser-icons'>
+						<img class = 'click' src = "click.svg">
+						<span> = </span>
+						<img class = 'eraser' src = "eraser.svg">
+					</span>
+					<span>
+						<button class="kbc-button disabled">w</button>
+						<span>=(<span style="text-decoration:line-through;">input</span>)</span>
+					</span>
+				</div>
 			</div>
 		</div>
+
 		<div class = 'sketch-wrapper'>
 			<div class = 'sketch-container'>
 				<div class = 'sketch-inner'></div>
 				<div class = 'logo'>TCo's Etch-A-Sketch</div>
 			</div>
 		</div>
+
 	</div>
 </body>
 </html>
